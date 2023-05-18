@@ -294,6 +294,7 @@
             btnAgregar.addEventListener('click',() =>{
                 cantidadInput.value = 1;
                 descuento.style.display = 'none';
+                precioTotal.innerHTML = `S/ ${precio}`;
             });
 
             function agregarProducto() {
