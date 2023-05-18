@@ -1,0 +1,362 @@
+@font-face {
+    font-family: Chalky;
+    src: url(../font/Chalky.otf);
+}
+*{
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+  }
+/*CONTENIDO ESPACIADO*/
+.fs{
+    display: flex;
+    justify-content: space-around;
+}
+/*CONTENIDO CENTRAL*/
+.fc{
+    display: flex;
+    align-items: center;
+}
+/*CONTENIDO CENTRADO*/
+.fcc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*CONTENIDO CENTRADO DISTRIBUIDO*/
+.fsc{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+/*CONTENIDO VERTICAL*/
+.fcl{
+    display: flex;
+    flex-direction: column;
+}
+/*CONTENIDO VERTICAL CENTRAL*/
+.fccl{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/*CONTENIDO VERTICAL CENTRADO*/
+.fcls{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+/*CONTENIDO VERTICAL CENTRAL CENTRADO*/
+.fccc{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+/*CONTENIDO VERTICAL CENTRADO ESPACIADO*/
+.fcsc{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.c-base{
+    width: 100%;
+    height: auto;
+    font-family: Chalky;
+    background-color: white;
+}
+/*BARRA MENU*/
+.c-menu{
+    width: 20%;
+    height: 100vh;
+    background-color:#212529;
+}
+.c-img{
+    width: 100%;
+    height: 20vh;
+}
+.c-img img{
+    height: 7.5vh;
+}
+.c-enlace{
+    width: 100%;
+    height: 70vh;
+}
+.c-enlace a{
+    font-size: 2rem;
+    text-decoration: none;
+    color: white;
+}
+/*USUARIO*/
+.c-usuario{
+    width: 100%;
+    height: 10vh;
+    font-size: 1.5rem;
+    color: white;
+    border-top: white .1vw solid;
+}
+.c-usuario i:hover{
+    cursor: pointer;
+}
+.c-usuario a{
+    text-decoration: none;
+    color: white;
+}
+.c-usuario a:hover{
+    color: #dc3545;
+}
+/*CONTENIDO*/
+.c-content{
+    width: 80%;
+    height: 100vh;
+    overflow-y: scroll;
+}
+.c-titulo{
+    width: 100%;
+    height: 15vh;
+    background-color: #f8f9fa;
+}
+.c-data{
+    width: 100%;
+    height: auto;
+    background-color: white;
+}
+.c-table{
+    width: 100%;
+    height: 70vh;
+    font-size: 1.5rem;
+}
+.c-table thead{
+    width: 100%;
+    height: 5vh;
+    background-color: #212529;
+    color: white;
+}
+.c-table tr{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.c-table th{
+    width: 10%;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.c-table tbody{
+    background-color: #f8f9fa;
+    width: 100%;
+    height: 15vh;
+}
+.c-table td{
+    width: 15%;
+    height: 5vh;
+    font-size: 1rem;
+    text-align: center;
+}
+#data-text{
+    overflow-y: auto;
+}
+.c-table tr{
+    border-bottom: solid #212529 .1vw;
+}
+.opt{
+    width: 45%;
+    height: 5vh;
+}
+.opt a{
+    width: 50%;
+    height: 5vh;
+    text-decoration: none;
+}
+.edi-btn{
+    display: none;
+}
+#editar{
+    color: #ffc107;
+    cursor: pointer;
+}
+.eli-btn{
+    display: none;
+}
+#variante{
+    color:#0dcaf0;
+}
+#descuento{
+    color: #0d6efd;
+}
+#eliminar{
+    color: #dc3545;
+    cursor: pointer;
+}
+/*AGREGAR*/
+.c-agregar{
+    width: 100%;
+    height: auto;
+}
+.c-agregar form{
+    flex-wrap: wrap;
+}
+.c-input{
+    width: 25%;
+    height: 10vh;
+    margin: 1%;
+    font-size: 1.3rem;
+}
+.c-input input{
+    padding: 2%;
+    border-radius: .3vw;
+    text-align: center;
+    border: #212529 solid .1vw;
+}
+.c-input select{
+    padding: 2%;
+    border-radius: .3vw;
+    text-align: center;
+    border: #212529 solid .1vw;
+}
+.cat-data{
+    padding: 2%;
+    border-radius: .3vw;
+    text-align: center;
+    border: #212529 solid .1vw;
+}
+.c-input textarea{
+    padding: 2%;
+    border-radius: .3vw;
+    text-align: center;
+    border: #212529 solid .1vw;
+}
+.c-input a{
+    font-size: 1rem;
+}
+/*EDITAR*/
+.c-editar{
+    width: 100%;
+    height: 85vh;
+    font-size: 1.5rem;
+}
+.editarForm{
+    width: 60%;
+    height: 50vh;
+}
+.editarForm input{
+    padding: 1%;
+    border-radius: .5vw;
+    text-align: center;
+    border: #212529 solid .1vw;
+}.editarForm textarea{
+    padding: 2%;
+    border-radius: .3vw;
+    text-align: center;
+    border: #212529 solid .1vw;
+}
+.btn-sub{
+    background-color: #0d6efd;
+    border: none;
+    color: white;
+}
+.back{
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 1.5%;
+    border-radius: .3vw;
+}
+.back:hover{
+    cursor: pointer;
+    background-color: #0dcaf0;
+}
+/*PRODUCTO*/
+#imgSelect{
+    font-size: 1.2rem;
+    border: #a8a8a8 solid .1vw;
+    border-radius: .2vw;
+    text-align: center;
+    color: #6c757d;
+    padding: 1%;
+    background-color: white;
+}
+#imgSelect:hover{
+    cursor: pointer;
+}
+#fotoProducto{
+    display: none;
+}
+#showFoto{
+    height: 4vh;
+}
+/*INICIO DE SESIÓN*/
+.c-log{
+    width: 50%;
+    height: 70vh;
+    margin-top: 15vh;
+    border-radius: .5vw;
+    background-color: #212529;
+}
+.c-brand{
+    width: 30%;
+    height: 15vh;
+}
+.c-brand img{
+    height: 7.5vh;
+}
+.c-log form{
+    width: 80%;
+    height: 55vh;
+    font-size: 2.5rem;
+    color: white;
+}
+.c-log input{
+    width: 40%;
+    padding: 2%;
+    border-radius: .3vw;
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: #f8f9fa;
+}
+#npt{
+    padding: 1.5%;
+    border: white solid .2vw;
+    background-color: transparent;
+    font-size: 1.7rem;
+    color: white;
+    width: 20%;
+    cursor: pointer;
+}
+.bx-repost{
+    color: #0d6efd;
+    font-size: 1.5rem;
+}
+td select{
+    padding: 2%;
+    border-radius: .3vw;
+    text-align: center;
+    border: #212529 solid .1vw;
+    font-family: 'Chalky';
+}
+
+.opt button{
+    padding: 5%;
+    border-radius: .3vw;
+    text-align: center;
+    font-size: 1rem;
+    background-color: #0d6efd;
+    border: none;
+    color: white;
+    font-family: 'Chalky';
+}
