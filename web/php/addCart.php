@@ -55,30 +55,43 @@ if (!isset($_SESSION['usuario'])){
                     $resultadoExistencia = mysqli_query($conexion, $consultaExistencia);
                     $existeProducto = mysqli_num_rows($resultadoExistencia);        
                     if ($existeProducto > 0) {
-                        // Actualizar la cantidad del producto, el precio y el descuento existente en detalle_carrito
-                        $consultaUpdateCantidad = "UPDATE detalle_carrito SET `cant` = `cant` + '$cantidad', `subprecio` = `subprecio` + '$precioCantidad', `descuento` = `descuento` + '$descuento'  WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
-                        $resultadoUpdateCantidad = mysqli_query($conexion, $consultaUpdateCantidad) or die("Error al actualizar en el producto existente.");
+                        // Verificar que la cantidad total no exceda las 12 unidades
+                        $consultaCantidadTotal = "SELECT cant FROM detalle_carrito WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto'";
+                        $resultadoCantidadTotal = mysqli_query($conexion, $consultaCantidadTotal) or die("Error al obtener la cantidad total del producto.");
+                        $cantidadTotal = mysqli_fetch_assoc($resultadoCantidadTotal)['cant'];
 
-                        // Obtener el descuento del producto existente
-                        $consultaCantidadExistente = "SELECT cant FROM detalle_carrito WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
-                        $resultadoCantidadExistente = mysqli_query($conexion, $consultaDescuentoExistente) or die("Error al obtener el descuento del producto existente.");
-                        $cantidadExistente = mysqli_fetch_assoc($resultadoDescuentoExistente)['cant'];
+                        if (($cantidadTotal + $cantidad) > 12) {
+                            die("Error: La cantidad total del producto no puede ser mayor a 12 unidades.");
+                        } else {
+                            // Actualizar la cantidad del producto, el precio y el descuento existente en detalle_carrito
+                            $consultaUpdateCantidad = "UPDATE detalle_carrito SET `cant` = `cant` + '$cantidad', `subprecio` = `subprecio` + '$precioCantidad', `descuento` = `descuento` + '$descuento'  WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
+                            $resultadoUpdateCantidad = mysqli_query($conexion, $consultaUpdateCantidad) or die("Error al actualizar en el producto existente.");
 
-                        // // Determinar el descuento correspondiente a la cantidad
-                        // $consultaDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' AND `cantidad` = '$cantidadExistente'";
-                        // $resultadoDescuentoExistente = mysqli_query($conexion, $consultaDescuento);
-                        // $existeDescuento = mysqli_num_rows($resultadoDescuentoExistente);
-                        // if ($existeDescuento > 0){
-                        //     $descuentoExiste = mysqli_fetch_assoc($resultadoDescuentoExistente)['descuento'];
-                        //     $consultaUpdateDescuento = "UPDATE detalle_carrito SET `descuento` = '$descuentoExiste' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
-                        //     $resultadoUpdateDescuento = mysqli_query($conexion, $consultaUpdateDescuento) or die("Error al actualizar en el producto existente.");
-                        // } else {
-                        //     $ultimoDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' ORDER BY idDescuento DESC LIMIT 1";
-                        //     $resultadoUltimoDescuento = mysqli_query($conexion, $consultaDescuentoExistente) or die("Error al obtener el descuento del producto existente.");
-                        //     $ultimoDescuentoExistente = mysqli_fetch_assoc($resultadoUltimoDescuento)['cant'];
-                        //     $consultaUpdateUltimoDescuento = "UPDATE detalle_carrito SET `descuento` = '$ultimoDescuentoExistente' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
-                        //     $resultadoUpdateUltimoDescuento = mysqli_query($conexion, $consultaUpdateUltimoDescuento) or die("Error al actualizar en el producto existente.");
-                        // }
+                            // Obtener el descuento del producto existente
+                            $consultaCantidadExistente = "SELECT cant FROM detalle_carrito WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
+                            $resultadoCantidadExistente = mysqli_query($conexion, $consultaDescuentoExistente) or die("Error al obtener el descuento del producto existente.");
+                            $cantidadExistente = mysqli_fetch_assoc($resultadoDescuentoExistente)['cant'];
+
+                            // Determinar el descuento correspondiente a la cantidad
+                            $consultaDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' AND `cantidad` = '$cantidadExistente'";
+                            $resultadoDescuentoExistente = mysqli_query($conexion, $consultaDescuento);
+                            $existeDescuento = mysqli_num_rows($resultadoDescuentoExistente);
+                            if ($existeDescuento > 0){
+                                $descuentoExiste = mysqli_fetch_assoc($resultadoDescuentoExistente)['descuento'];
+                                $calcularDescuento = $precio - ($precio * ($descuentoExiste/100));
+                                $descuentoTotal = ($precio * $cantidadExistente) - ($cantidadExistente * $calcularDescuento);
+                                $consultaUpdateDescuento = "UPDATE detalle_carrito SET `descuento` = '$descuentoTotal' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
+                                $resultadoUpdateDescuento = mysqli_query($conexion, $consultaUpdateDescuento) or die("Error al actualizar en el producto existente.");
+                            } else {
+                                $ultimoDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' ORDER BY idDescuento DESC LIMIT 1";
+                                $resultadoUltimoDescuento = mysqli_query($conexion, $ultimoDescuento) or die("Error al obtener el descuento del producto existente.");
+                                $ultimoDescuentoExistente = mysqli_fetch_assoc($resultadoUltimoDescuento)['descuento'];
+                                $calcularDescuentoExistente= $precio - ($precio * ($ultimoDescuentoExistente/100));
+                                $descuentoTotalExistente = ($precio * $cantidadExistente) - ($cantidadExistente * $calcularDescuentoExistente);
+                                $consultaUpdateUltimoDescuento = "UPDATE detalle_carrito SET `descuento` = '$descuentoTotalExistente' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
+                                $resultadoUpdateUltimoDescuento = mysqli_query($conexion, $consultaUpdateUltimoDescuento) or die("Error al actualizar en el producto existente.");
+                            }
+                        }
                     } else {
                         // Insertar un nuevo registro en detalle_carrito
                         $consultaInsertar = "INSERT INTO detalle_carrito (`carritoId`, `productoId`, `cant`, `subprecio`, `descuento`) VALUES ('$shop', '$idProducto', '$cantidad', '$precioCantidad', '$descuento')";
@@ -91,29 +104,42 @@ if (!isset($_SESSION['usuario'])){
                     $resultadoExistencia = mysqli_query($conexion, $consultaExistencia);
                     $existeProducto = mysqli_num_rows($resultadoExistencia);
                     if ($existeProducto > 0) {
-                        // Actualizar la cantidad del producto, el precio y el descuento existente en detalle_carrito
-                        $consultaUpdateCantidad = "UPDATE detalle_carrito SET `cant` = `cant` + '$cantidad', `subprecio` = `subprecio` + '$precioCantidad' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` = '$talla'";
-                        $resultadoUpdateCantidad = mysqli_query($conexion, $consultaUpdateCantidad) or die("Error al actualizar en el producto existente.");
+                        // Verificar que la cantidad total no exceda las 12 unidades
+                        $consultaCantidadTotal = "SELECT cant FROM detalle_carrito WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto'";
+                        $resultadoCantidadTotal = mysqli_query($conexion, $consultaCantidadTotal) or die("Error al obtener la cantidad total del producto.");
+                        $cantidadTotal = mysqli_fetch_assoc($resultadoCantidadTotal)['cant'];
 
-                        // Obtener el descuento del producto existente
-                        $consultaCantidadExistente = "SELECT cant FROM detalle_carrito WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` = '$talla'";
-                        $resultadoCantidadExistente = mysqli_query($conexion, $consultaDescuentoExistente) or die("Error al obtener el descuento del producto existente.");
-                        $cantidadExistente = mysqli_fetch_assoc($resultadoDescuentoExistente)['cant'];
-
-                         // Determinar el descuento correspondiente a la cantidad
-                        $consultaDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' AND `cantidad` = '$cantidadExistente'";
-                        $resultadoDescuentoExistente = mysqli_query($conexion, $consultaDescuento);
-                        $existeDescuento = mysqli_num_rows($resultadoDescuentoExistente);
-                        if ($existeDescuento > 0){
-                            $descuentoExiste = mysqli_fetch_assoc($resultadoDescuentoExistente)['descuento'];
-                            $consultaUpdateDescuento = "UPDATE detalle_carrito SET `descuento` = '$descuentoExiste' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
-                            $resultadoUpdateDescuento = mysqli_query($conexion, $consultaUpdateDescuento) or die("Error al actualizar en el producto existente.");
+                        if (($cantidadTotal + $cantidad) > 12) {
+                            die("Error: La cantidad total del producto no puede ser mayor a 12 unidades.");
                         } else {
-                            $ultimoDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' ORDER BY idDescuento DESC LIMIT 1";
-                            $resultadoUltimoDescuento = mysqli_query($conexion, $consultaDescuentoExistente) or die("Error al obtener el descuento del producto existente.");
-                            $ultimoDescuentoExistente = mysqli_fetch_assoc($resultadoUltimoDescuento)['cant'];
-                            $consultaUpdateUltimoDescuento = "UPDATE detalle_carrito SET `descuento` = '$ultimoDescuentoExistente' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` IS NULL";
-                            $resultadoUpdateUltimoDescuento = mysqli_query($conexion, $consultaUpdateUltimoDescuento) or die("Error al actualizar en el producto existente.");
+                            // Actualizar la cantidad del producto, el precio y el descuento existente en detalle_carrito
+                            $consultaUpdateCantidad = "UPDATE detalle_carrito SET `cant` = `cant` + '$cantidad', `subprecio` = `subprecio` + '$precioCantidad' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` = '$talla'";
+                            $resultadoUpdateCantidad = mysqli_query($conexion, $consultaUpdateCantidad) or die("Error al actualizar en el producto existente.");
+
+                            // Obtener el descuento del producto existente
+                            $consultaCantidadExistente = "SELECT cant FROM detalle_carrito WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` = '$talla'";
+                            $resultadoCantidadExistente = mysqli_query($conexion, $consultaCantidadExistente) or die("Error al obtener el descuento del producto existente.");
+                            $cantidadExistente = mysqli_fetch_assoc($resultadoCantidadExistente)['cant'];
+
+                            // Determinar el descuento correspondiente a la cantidad
+                            $consultaDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' AND `cantidad` = '$cantidadExistente'";
+                            $resultadoDescuentoExistente = mysqli_query($conexion, $consultaDescuento);
+                            $existeDescuento = mysqli_num_rows($resultadoDescuentoExistente);
+                            if ($existeDescuento > 0){
+                                $descuentoExiste = mysqli_fetch_assoc($resultadoDescuentoExistente)['descuento'];
+                                $calcularDescuento = $precio - ($precio * ($descuentoExiste/100));
+                                $descuentoTotal = ($precio * $cantidadExistente) - ($cantidadExistente * $calcularDescuento);
+                                $consultaUpdateDescuento = "UPDATE detalle_carrito SET `descuento` = '$descuentoTotal' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante` = '$talla'";
+                                $resultadoUpdateDescuento = mysqli_query($conexion, $consultaUpdateDescuento) or die("Error al actualizar en el producto existente.");
+                            } else {
+                                $ultimoDescuento = "SELECT descuento FROM descuento WHERE `categoriaId` = '$idCategoria' ORDER BY idDescuento DESC LIMIT 1";
+                                $resultadoUltimoDescuento = mysqli_query($conexion, $ultimoDescuento) or die("Error al obtener el descuento del producto existente.");
+                                $ultimoDescuentoExistente = mysqli_fetch_assoc($resultadoUltimoDescuento)['descuento'];
+                                $calcularDescuentoExistente= $precio - ($precio * ($ultimoDescuentoExistente/100));
+                                $descuentoTotalExistente = ($precio * $cantidadExistente) - ($cantidadExistente * $calcularDescuentoExistente);
+                                $consultaUpdateUltimoDescuento = "UPDATE detalle_carrito SET `descuento` = '$descuentoTotalExistente' WHERE `carritoId` = '$shop' AND `productoId` = '$idProducto' AND `variante`  = '$talla'";
+                                $resultadoUpdateUltimoDescuento = mysqli_query($conexion, $consultaUpdateUltimoDescuento) or die("Error al actualizar en el producto existente.");
+                            }
                         }
                     } else {
                         // Insertar un nuevo registro en detalle_carrito

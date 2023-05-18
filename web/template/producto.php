@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>
     <title>KARTUN</title>
 </head>
 <body>
@@ -179,7 +180,7 @@
             plusBtn.addEventListener('click', () => {
                 let cantidad = parseInt(cantidadInput.value);
                 cantidad = isNaN(cantidad) ? 1 : cantidad;
-                cantidad = Math.min(cantidad + 1, 30); // Actualizar la cantidad aquí
+                cantidad = Math.min(cantidad + 1, 12); // Actualizar la cantidad aquí
                 cantidadInput.value = cantidad;
                 actualizarPrecioTotal(cantidad);
             });
@@ -200,7 +201,7 @@
                     precioTotal.innerHTML = `S/ ${precio}`;
                     descuento.style.display = 'none';
                     descontando.value = `0.00`;
-                } else if (cantidad >= 2 && cantidad <= 30) { // Usar === para comparar valores
+                } else if (cantidad >= 2 && cantidad <= 12) { // Usar === para comparar valores
                     precioTotal.innerHTML = `S/ <del>${precio}</del>`;
                     descuento.style.display = 'block';
                     descuento.innerHTML = `S/ ${precioConDescuento}`;
@@ -337,10 +338,18 @@
                     }
                 })
                 .then(data => {
-                    console.log(data);
-                    actualizarCarrito();
-                    actualizarProductos();
-                    actualizarPrecio();
+                    if (data.startsWith("Error:")) {
+                        Swal.fire({
+                        icon: 'error',
+                        title: '¡ERROR!',
+                        text: 'Solo se pueden agregar 12 unidades por producto.'
+                        });
+                    } else {
+                        console.log(data);
+                        actualizarCarrito();
+                        actualizarProductos();
+                        actualizarPrecio();
+                    }
                 })
                 .catch(error =>{
                     console.error(error);
