@@ -858,16 +858,19 @@ input[type=number]::-webkit-outer-spin-button {
     height: 5vh;
     color: white;
     background-color:#0048DB;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
     position: absolute;
     top: 20vh;
-    z-index: 2;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: all ease .3s;
 }
 .pdt:hover .detail{
-    display: flex;
+    opacity: 1;
+    transform: translateY(0%);
 }
 .detail h2{
     font-size: 1rem;
@@ -888,6 +891,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    z-index: 2;
 }
 .price h1{
     width: 50%;
@@ -1372,7 +1376,7 @@ form p{
     font-size: 1.5rem;
 }
 .mn-off{
-    width: 25%;
+    width: 27.5%;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -1,5 +1,3 @@
-//SLIDER AUTO
-
 //VENTANA SLIDE
 const ventana = document.querySelector('#ventana');
 const cVentana = document.querySelector('#c-ventana');

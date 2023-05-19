@@ -1063,25 +1063,27 @@ $id = $_SESSION['idCliente'];
                     $respuesta =  mysqli_query($conexion, $sql2);
                     if(mysqli_num_rows($respuesta) > 0) {
             ?>
-                    carrito.classList.remove('moveLeft');
-                    data2.style.display = 'flex';
-                    finalPrice.style.display = 'flex';
-                    setTimeout(() => {
-                        carrito.style.display = 'none';
-                        data2.classList.add('in');
-                        finalPrice.classList.add('in');
-                    }, 300);
-                <?php
-                    } else {
-                ?>
-                    carrito.classList.remove('moveLeft');
-                    data.style.display = 'flex';
-                    finalPrice.style.display = 'flex';
-                    setTimeout(() => {
-                        carrito.style.display = 'none';
-                        data.classList.add('in');
-                        finalPrice.classList.add('in');
-                    }, 300);
+                totalPago();
+                carrito.classList.remove('moveLeft');
+                data2.style.display = 'flex';
+                finalPrice.style.display = 'flex';
+                setTimeout(() => {
+                    carrito.style.display = 'none';
+                    data2.classList.add('in');
+                    finalPrice.classList.add('in');
+                }, 300);
+            <?php
+                } else {
+            ?>
+                totalPago();
+                carrito.classList.remove('moveLeft');
+                data.style.display = 'flex';
+                finalPrice.style.display = 'flex';
+                setTimeout(() => {
+                    carrito.style.display = 'none';
+                    data.classList.add('in');
+                    finalPrice.classList.add('in');
+                }, 300);
             <?php 
                 }
             }
@@ -1091,6 +1093,7 @@ $id = $_SESSION['idCliente'];
                 $response =  mysqli_query($conexion, $sql3);
                 if(mysqli_num_rows($response) > 0) {
             ?>   
+                totalPago();
                 data2.classList.remove('in');
                 data3.style.display = 'flex';
                 setTimeout(() => {
@@ -1118,6 +1121,19 @@ $id = $_SESSION['idCliente'];
             <?php } ?>
         <?php } ?>
     });
+
+    function totalPago(){
+        fetch('./php/updPagoTotal.php')
+        .then(response => response.text())
+        .then(totalPago => {
+            const precioTotal = document.querySelector('.s-sub');
+            precioTotal.innerHTML = totalPago;
+            console.log('Precio Total Actualizado');
+        })
+        .catch(error => {
+            console.error('Ocurrió un error al actualizar el número de productos en el carrito:', error);
+        });
+    }
 
     btnBoleta.addEventListener('click', pagando);
 
