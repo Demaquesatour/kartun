@@ -15,17 +15,28 @@ while($mostrar = mysqli_fetch_array($result)){
 <td class="fcc"><?php echo $mostrar['tipPago'] ?></td>
 <td class="fcc"><?php echo $mostrar['nroOpe'] ?></td>
 <td class="fcc"><?php echo $mostrar['titular'] ?></td>
-<td class="fcc">
-    <select name="stdCart" id="estado">
-        <option selected disabled value="<?php echo $mostrar['estado'] ?>"><?php echo $mostrar['estado'] ?></option>
-        <option value="ACEPTADO">ACEPTADO</option>
-        <option value="CANCELADO">CANCELADO</option>
-    </select>
-</td>
-<td class="fsc opt">
-    <button class="update">ACTUALIZAR</button>
-    <a class="fcc"><i id="eliminar" class='bx bxs-trash-alt'></i></a>
-</td>
+<?php 
+    $estado = $mostrar['estado'];
+    if($estado === 'PENDIENTE'){
+    ?>  
+        <td class="fcc">
+            <select name="stdCart" id="estado">
+                <option selected disabled value="<?php echo $mostrar['estado'] ?>"><?php echo $mostrar['estado'] ?></option>
+                <option value="ACEPTADO">ACEPTADO</option>
+                <option value="CANCELADO">CANCELADO</option>
+            </select>
+        </td>
+        <td class="fsc opt">
+            <button class="update">ACTUALIZAR</button>
+            <a class="fcc"><i id="eliminar" class='bx bxs-trash-alt'></i></a>
+        </td>
+    <?php } else { ?>
+        <td class="fcc"><?php echo $mostrar['estado'] ?></td>
+        <td class="fsc opt">
+            <button style="background-color: #6c757d;">ACTUALIZADO</button>
+            <a class="fcc"><i id="eliminar" class='bx bxs-trash-alt'></i></a>
+        </td>
+<?php } ?>
 </tr>
 <?php
 } 

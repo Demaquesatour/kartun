@@ -24,11 +24,24 @@
     </div>
 <?php 
 }
+    $sql4 ="SELECT delivery FROM envio e INNER JOIN carrito c ON e.carritoId = c.idCarrito WHERE c.clienteId = '$id' AND c.autorizado = true";
+    $resultadoEnvio = mysqli_query($conexion, $sql4);
+    $existeEnvio = mysqli_num_rows($resultadoEnvio);
+    if($existeEnvio > 0){ 
+        $deliveryExiste = mysqli_fetch_assoc($resultadoEnvio)['delivery'];
 ?>
+    <div class="tx-ttl">
+        <h3>DELIVERY:</h3>
+        <p id="deliver">S/ <?php echo $deliveryExiste ?></p>
+    </div>
+<?php } else { ?>
     <div class="tx-ttl">
         <h3>DELIVERY:</h3>
         <p id="deliver">-</p>
     </div>
+<?php 
+    } 
+?>
     <div class="tx-ttl finalPrice">
         <h3>TOTAL:</h3>
         <p id="totalPagar">-</p>

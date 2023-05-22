@@ -23,7 +23,7 @@ if (!isset($_SESSION['usuario'])){
         $tipoPago = $_POST['slcPago'];
         $numOperacion = $_POST['nOpe'];
         $titular = $_POST['titPago'];
-        $tiempo = date('Y-m-d H:i:s');
+        $tiempo = $_POST['fecha'];
         $pago = $_POST['ttlpg'];
         $descuento = $_POST['dscttl'];
         $envio = $_POST['dlvry'];

@@ -9,8 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-    <script src='//cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    <!---BOX ICONS--->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!---SWEET ALERT--->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <title>KARTUN</title>
 </head>
 <body>
@@ -32,6 +34,12 @@
             <?php foreach ($result as $opt): ?>
                 <a href="template/producto.php?id=<?php echo $opt['idProducto'];?>&cat=<?php echo $opt['catProducto'];?>"><div class="pdt">
                     <img src="/kartun/admin/<?php echo $opt['enlace'];?>" alt="">
+                    <?php 
+                        $prd = $opt['idProducto'];
+                        $consulta = "SELECT * FROM variante WHERE productoId = '$prd'";
+                        $resultado = mysqli_query($conexion, $consulta);
+                        if (mysqli_num_rows($resultado) > 0) {
+                    ?>
                     <div class="detail">
                         <h2>TALLAS</h2>
                         <div class="medidas">
@@ -45,6 +53,9 @@
                             <?php endforeach ?>
                         </div>
                     </div>
+                    <?php
+                        }
+                    ?>
                     <div class="price">
                         <h1><?php echo $opt['producto'];?></h1>
                         <p>S/ <?php echo $opt['precio'];?></p>
@@ -53,7 +64,7 @@
                 <?php endforeach ?>
             </div>
         </div>
-        <!--SHORT-->
+        <!--SHORTS-->
         <div id="sh" class="model">
             <div class="title">
                 <h1>SHORTS</h1>
@@ -66,6 +77,12 @@
                 <?php foreach ($result as $opt): ?>
                     <a href="template/producto.php?id=<?php echo $opt['idProducto'];?>&cat=<?php echo $opt['catProducto'];?>"><div class="pdt">
                     <img src="/kartun/admin/<?php echo $opt['enlace'];?>" alt="">
+                    <?php 
+                        $prd = $opt['idProducto'];
+                        $consulta = "SELECT * FROM variante WHERE productoId = '$prd'";
+                        $resultado = mysqli_query($conexion, $consulta);
+                        if (mysqli_num_rows($resultado) > 0) {
+                    ?>
                     <div class="detail">
                         <h2>TALLAS</h2>
                         <div class="medidas">
@@ -79,6 +96,9 @@
                             <?php endforeach ?>
                         </div>
                     </div>
+                    <?php
+                        }
+                    ?>
                     <div class="price">
                         <h1><?php echo $opt['producto'];?></h1>
                         <p>S/ <?php echo $opt['precio'];?></p>
@@ -100,6 +120,12 @@
             <?php foreach ($result as $opt): ?>
                 <a href="template/producto.php?id=<?php echo $opt['idProducto'];?>&cat=<?php echo $opt['catProducto'];?>"><div class="pdt">
                     <img src="/kartun/admin/<?php echo $opt['enlace'];?>" alt="">
+                    <?php 
+                        $prd = $opt['idProducto'];
+                        $consulta = "SELECT * FROM variante WHERE productoId = '$prd'";
+                        $resultado = mysqli_query($conexion, $consulta);
+                        if (mysqli_num_rows($resultado) > 0) {
+                    ?>
                     <div class="detail">
                         <h2>TALLAS</h2>
                         <div class="medidas">
@@ -113,6 +139,9 @@
                             <?php endforeach ?>
                         </div>
                     </div>
+                    <?php
+                        }
+                    ?>
                     <div class="price">
                         <h1><?php echo $opt['producto'];?></h1>
                         <p>S/ <?php echo $opt['precio'];?></p>
@@ -134,6 +163,12 @@
             <?php foreach ($result as $opt): ?>
                 <a href="template/producto.php?id=<?php echo $opt['idProducto'];?>&cat=<?php echo $opt['catProducto'];?>"><div class="pdt">
                     <img src="/kartun/admin/<?php echo $opt['enlace'];?>" alt="">
+                    <?php 
+                        $prd = $opt['idProducto'];
+                        $consulta = "SELECT * FROM variante WHERE productoId = '$prd'";
+                        $resultado = mysqli_query($conexion, $consulta);
+                        if (mysqli_num_rows($resultado) > 0) {
+                    ?>
                     <div class="detail">
                         <h2>TALLAS</h2>
                         <div class="medidas">
@@ -147,6 +182,9 @@
                             <?php endforeach ?>
                         </div>
                     </div>
+                    <?php
+                        }
+                    ?>
                     <div class="price">
                         <h1><?php echo $opt['producto'];?></h1>
                         <p>S/ <?php echo $opt['precio'];?></p>
@@ -169,6 +207,12 @@
                 <a href="template/producto.php?id=<?php echo $opt['idProducto'];?>&cat=<?php echo $opt['catProducto'];?>">
                 <div class="pdt">
                     <img src="/kartun/admin/<?php echo $opt['enlace'];?>" alt="">
+                    <?php 
+                        $prd = $opt['idProducto'];
+                        $consulta = "SELECT * FROM variante WHERE productoId = '$prd'";
+                        $resultado = mysqli_query($conexion, $consulta);
+                        if (mysqli_num_rows($resultado) > 0) {
+                    ?>
                     <div class="detail">
                         <h2>TALLAS</h2>
                         <div class="medidas">
@@ -182,6 +226,9 @@
                             <?php endforeach ?>
                         </div>
                     </div>
+                    <?php
+                        }
+                    ?>
                     <div class="price">
                         <h1><?php echo $opt['producto'];?></h1>
                         <p>S/ <?php echo $opt['precio'];?></p>

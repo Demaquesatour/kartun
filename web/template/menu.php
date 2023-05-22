@@ -392,7 +392,7 @@ $id = $_SESSION['idCliente'];
                 <div class="prd-inf">
                     <div class="prd-img">
                             <img src="/kartun/admin/<?php echo $rs['enlace'];?>" alt="">
-                        </div>
+                    </div>
                     <div class="prd-dt">
                         <h3><?php echo $rs['producto'];?></h3>
                         <?php
@@ -413,10 +413,12 @@ $id = $_SESSION['idCliente'];
                                 <h4>PRECIO:</h4>
                                 <p>S/ <?php echo $rs['subprecio'];?></p>
                             </div>
-                        <?php }else{ ?>
+                        <?php 
+                        } else { 
+                        ?>
                             <div class="prd-txt">
                                 <h4>CANTIDAD:</h4>
-                                <p><?php echo $rs['cantidad'];?></p>
+                                <p><?php echo $rs['cant'];?></p>
                             </div>
                             <div class="prd-txt">
                                 <h4>PRECIO:</h4>
@@ -859,6 +861,8 @@ $id = $_SESSION['idCliente'];
             data2.style.display = 'none';
             data3.classList.add('in');
         }, 300);
+
+        calcularTotal();
     }
 
     function sendRecojo(){
@@ -917,6 +921,8 @@ $id = $_SESSION['idCliente'];
             data2.style.display = 'none';
             data3.classList.add('in');
         }, 300);
+
+        calcularTotal();
     }
 
     let pago = document.querySelector('#pago');
@@ -1063,7 +1069,9 @@ $id = $_SESSION['idCliente'];
                     $respuesta =  mysqli_query($conexion, $sql2);
                     if(mysqli_num_rows($respuesta) > 0) {
             ?>
+            //Si ya se agregó el contacto se pasa al formulario de envío
                 totalPago();
+                totalProductos();
                 carrito.classList.remove('moveLeft');
                 data2.style.display = 'flex';
                 finalPrice.style.display = 'flex';
@@ -1075,7 +1083,9 @@ $id = $_SESSION['idCliente'];
             <?php
                 } else {
             ?>
+            //Si no al formulario de contacto
                 totalPago();
+                totalProductos();
                 carrito.classList.remove('moveLeft');
                 data.style.display = 'flex';
                 finalPrice.style.display = 'flex';
@@ -1093,37 +1103,56 @@ $id = $_SESSION['idCliente'];
                 $response =  mysqli_query($conexion, $sql3);
                 if(mysqli_num_rows($response) > 0) {
             ?>   
+            //Si ya se agregó el envío se pasa al formulario de pago
                 totalPago();
+                totalProductos();
                 data2.classList.remove('in');
                 data3.style.display = 'flex';
                 setTimeout(() => {
                     data2.style.display = 'none';
                     data3.classList.add('in');
                 }, 300);
-
-                let price = data2.closest('.mdl-cart').querySelector('#deliver');
-                <?php 
-                $rs = mysqli_fetch_assoc($response);
-                ?>
-                let precioDelivery = <?php echo $rs['delivery'];?>;
-                let dlv = `S/ ${precioDelivery}`;
-                price.textContent = dlv;
-                let prc = price.textContent.replace('S/ ','');
-                let subtotal = data2.closest('.mdl-cart').querySelector('#subTotalPago');
-                let sbttl = subtotal.textContent.replace('S/ ','');
-                let total = data2.closest('.mdl-cart').querySelector('#totalPagar');
-                let descuento = data2.closest('.mdl-cart').querySelector('#descTotal');
-                let dsct = descuento.textContent.replace('S/ ','');
-                let precioFinal;
-                precioFinal = parseFloat(sbttl) + parseFloat(prc) - parseFloat(dsct);
-                let precioRound = precioFinal.toFixed(2);
-                total.textContent = `S/ ${precioRound}`;
+                setTimeout(() => {
+                    calcularTotal();
+                }, 500);
             <?php } ?>
         <?php } ?>
     });
 
+    function calcularTotal(){
+        //Obtencion y modificación de datos
+        let total = data2.closest('.mdl-cart').querySelector('#totalPagar');
+        let subtotal = data2.closest('.mdl-cart').querySelector('#subTotalPago');
+        let sbttl = subtotal.textContent.replace('S/ ','');
+        let descuento = data2.closest('.mdl-cart').querySelector('#descTotal');
+        let dsct = descuento.textContent.replace('S/ ','');
+        let delivery = data2.closest('.mdl-cart').querySelector('#deliver');
+        let dlv = delivery.textContent.replace('S/ ','');
+
+        //Calculo del total a pagar
+        let precioFinal;
+        precioFinal = parseFloat(sbttl) + parseFloat(dlv) - parseFloat(dsct);
+        let precioRound = precioFinal.toFixed(2);
+        total.textContent = `S/ ${precioRound}`;
+
+        console.log('Total Actualizado');
+    }
+
+    function totalProductos(){
+        fetch('/kartun/web/php/updPrdsTotal.php')
+        .then(response => response.text())
+        .then(productosTotal => {
+            const totalProductos = document.querySelector('.s-crt');
+            totalProductos.innerHTML = productosTotal;
+            console.log('Productos Actualizados');
+        })
+        .catch(error => {
+            console.error('Ocurrió un error al actualizar el número de productos en el carrito:', error);
+        });
+    }
+
     function totalPago(){
-        fetch('./php/updPagoTotal.php')
+        fetch('/kartun/web/php/updPagoTotal.php')
         .then(response => response.text())
         .then(totalPago => {
             const precioTotal = document.querySelector('.s-sub');
@@ -1131,7 +1160,7 @@ $id = $_SESSION['idCliente'];
             console.log('Precio Total Actualizado');
         })
         .catch(error => {
-            console.error('Ocurrió un error al actualizar el número de productos en el carrito:', error);
+            console.error('Ocurrió un error al actualizar el precio total en el carrito:', error);
         });
     }
 
@@ -1145,22 +1174,36 @@ $id = $_SESSION['idCliente'];
         let numOperacion = boleta.closest('.frmData').querySelector('#numOpe').value;
         let titular = boleta.closest('.frmData').querySelector('#tituPago').value;
         let carrito = boleta.closest('.frmData').querySelector('#carrito').value;
-        let delivery = boleta.closest('.frmData').querySelector('#delvr').value;
-        let descuento = boleta.closest('.frmData').querySelector('#dscTotal').value;
-        let pago = boleta.closest('.frmData').querySelector('#ttlPagar').value;
+        let delivery = boleta.closest('.frmPago').nextElementSibling.querySelector('#deliver').textContent.replace('S/ ','');
+        let descuento = boleta.closest('.frmPago').nextElementSibling.querySelector('#descTotal').textContent.replace('S/ ','');
+        let pago = boleta.closest('.frmPago').nextElementSibling.querySelector('#subTotalPago').textContent.replace('S/ ','');
 
-        console.log(tipOperacion);
-        console.log(numOperacion);
-        console.log(titular);
-        console.log(carrito);
-        console.log(delivery);
-        console.log(descuento);
-        console.log(pago);
+        //Fecha actual
+        let fechaHoy = new Date();
+        // Obtener los componentes de la fecha y hora
+        var year = fechaHoy.getFullYear(); // Año (ejemplo: 2023)
+        var month = pad(fechaHoy.getMonth() + 1); // Mes (0-11, por lo que se agrega 1) (ejemplo: 05 para mayo)
+        var day = pad(fechaHoy.getDate()); // Día del mes (ejemplo: 20)
+        var hours = pad(fechaHoy.getHours()); // Horas (ejemplo: 13)
+        var minutes = pad(fechaHoy.getMinutes()); // Minutos (ejemplo: 45)
+        var seconds = pad(fechaHoy.getSeconds()); // Segundos (ejemplo: 30)
+        //Asignar 0 a números menos a 10
+        function pad(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+        // Crear una cadena con el formato deseado (YYYY-MM-DD HH:MM:SS)
+        var fechaHoraFormateada = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
+        // console.log(tipOperacion);
+        // console.log(numOperacion);
+        // console.log(titular);
+        // console.log(carrito);
+        // console.log(delivery);
+        // console.log(descuento);
+        // console.log(pago);
+        // console.log(fechaHoraFormateada);
 
         let regex = /^\d{8}$/;
-        // let prueba = regex.test(numOperacion);
-
-        // console.log(prueba);
 
         if(regex.test(numOperacion)) {
             if (titular !== '' && numOperacion !== '' && tipo > 0) { 
@@ -1173,6 +1216,7 @@ $id = $_SESSION['idCliente'];
                 formData.append('dscttl', descuento);
                 formData.append('dlvry', delivery);
                 formData.append('cartShop', carrito);
+                formData.append('fecha', fechaHoraFormateada);
 
                 console.log(formData);
 
@@ -1208,6 +1252,7 @@ $id = $_SESSION['idCliente'];
                     paid.style.opacity = '1';
                 }, 300);
 
+                actualizarCarrito();
 
              } else { 
                 Swal.fire({
