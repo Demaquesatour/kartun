@@ -30,9 +30,8 @@ $id = $_SESSION['idCliente'];
                             const userExist = document.querySelector('.isUsr');
 
                             userExist.addEventListener('click', () =>{
-                                lgOut.style.display = 'flex';
                                 setTimeout(() => {
-                                    lgOut.classList.add('slideDown');
+                                    lgOut.classList.toggle('slideDown');
                                 }, 300);
                             })
                     </script>
@@ -263,7 +262,7 @@ $id = $_SESSION['idCliente'];
                             $result = mysqli_query($conexion,$sql);
                         ?>
                         <?php foreach ($result as $des): ?>
-                        <option value="<?php echo $des['idDepartamento'];?>"><?php echo $des['departamento'];?></option>
+                        <option value="<?php echo $des['idDepartamento'];?>" data-price="<?php echo $des['precio'];?>" data-status="<?php echo $des['status'];?>"><?php echo $des['departamento'];?></option>
                         <?php endforeach ?>
                     </select>
                 </div>
@@ -718,14 +717,19 @@ $id = $_SESSION['idCliente'];
         var select = departamento.value;
         var provincia = departamento.closest('.frmData').querySelector('#prvnc');
         var delivery = departamento.closest('.mdl-cart').querySelector('#deliver');
+        var selected = departamento.options[departamento.selectedIndex];
+        var precio = selected.getAttribute('data-price');
+        var estado = selected.getAttribute('data-status');
         console.log(departamento);
         console.log(select);
         console.log(provincia);
-        if (select == 15) {
-            delivery.textContent = "S/ 12.00";
+
+        if(estado === '1'){
+            delivery.textContent = 'S/ ' + precio;
         } else {
-            delivery.textContent = "S/ 20.00";
+            delivery.textContent = 'S/ 0.00';
         }
+
         fetch('/kartun/web/php/getProvincia.php?dep=' + select)
         .then(response => response.text())
         .then(html =>{
@@ -1118,6 +1122,7 @@ $id = $_SESSION['idCliente'];
             <?php } ?>
         <?php } ?>
     });
+    
 
     function calcularTotal(){
         //Obtencion y modificación de datos

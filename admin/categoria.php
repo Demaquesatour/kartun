@@ -41,10 +41,10 @@
                         <tr>
                             <td><?php echo $mostrar['idCategoria'] ?></td>
                             <td><?php echo $mostrar['categoria'] ?></td>
-                            <td class="fsc opt">
-                                <a class="fcc" href="editarCat.php?id=<?php echo $mostrar['idCategoria']; ?>"><i id="editar" class='bx bxs-cog'></i></a>
-                                <a class="fcc" href="descuento.php?id=<?php echo $mostrar['idCategoria']; ?>"><i id="descuento" class='bx bxs-offer'></i></a>
-                                <a class="fcc" href="eliminarCat.php?id=<?php echo $mostrar['idCategoria']; ?>"><i id="eliminar" class='bx bxs-trash-alt'></i></a>
+                            <td class="opt">
+                                <a href="editarCat.php?id=<?php echo $mostrar['idCategoria']; ?>"><i id="editar" class='bx bxs-cog'></i></a>
+                                <a href="descuento.php?id=<?php echo $mostrar['idCategoria']; ?>"><i id="descuento" class='bx bxs-offer'></i></a>
+                                <a href="eliminarCat.php?id=<?php echo $mostrar['idCategoria']; ?>"><i id="eliminar" class='bx bxs-trash-alt'></i></a>
                             </td>
                         </tr>
                         <?php
@@ -55,6 +55,5 @@
         </div>
     </div>
     </div>
-    <script src="js/scripts.js"></script>
 </body>
 </html>

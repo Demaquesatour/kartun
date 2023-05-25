@@ -78,10 +78,10 @@
                                 <td><?php echo $mostrar['cantidad'] ?></td>
                                 <td><?php echo $mostrar['catProducto'] ?></td>
                                 <td id="data-text"><?php echo $mostrar['detalle'] ?></td>
-                                <td class="fsc opt">
-                                    <a class="fcc" href="editarPro.php?id=<?php echo $mostrar['idProducto']; ?>"><i id="editar" class='bx bxs-cog' ></i></a>
-                                    <a class="fcc" href="variante.php?id=<?php echo $mostrar['idProducto']; ?>"><i id="variante" class='bx bx-spreadsheet'></i></a>
-                                    <a class="fcc" href="eliminarPro.php?id=<?php echo $mostrar['idProducto']; ?>"><i id="eliminar" class='bx bxs-trash-alt'></i></a>
+                                <td opt">
+                                    <a href="editarPro.php?id=<?php echo $mostrar['idProducto']; ?>"><i id="editar" class='bx bxs-cog' ></i></a>
+                                    <a href="variante.php?id=<?php echo $mostrar['idProducto']; ?>"><i id="variante" class='bx bx-spreadsheet'></i></a>
+                                    <a href="eliminarPro.php?id=<?php echo $mostrar['idProducto']; ?>"><i id="eliminar" class='bx bxs-trash-alt'></i></a>
                                 </td>
                             </tr>
                             <?php

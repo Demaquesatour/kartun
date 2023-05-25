@@ -75,6 +75,7 @@ input[type=number] {
     height: auto;
     font-family: Chalky;
     background-color: white;
+    overflow: hidden;
 }
 /*BARRA MENU*/
 .c-menu{
@@ -134,7 +135,6 @@ input[type=number] {
 }
 .c-table{
     width: 100%;
-    height: 70vh;
     font-size: 1.5rem;
 }
 .c-table thead{
@@ -143,23 +143,13 @@ input[type=number] {
     background-color: #212529;
     color: white;
 }
-.c-table tr{
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
 .c-table th{
     width: 10%;
     height: 5vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 .c-table tbody{
     background-color: #f8f9fa;
     width: 100%;
-    height: 15vh;
 }
 .c-table td{
     width: 15%;
@@ -167,19 +157,39 @@ input[type=number] {
     font-size: 1rem;
     text-align: center;
 }
+.c-table td input{
+    /* background-color: yellowgreen; */
+    padding: 2.5%;
+    text-align: center;
+    border: .1vw black solid;
+    border-radius: .3vw;
+}
+.c-table td button{
+    color: white;
+    padding: 2.5%;
+    border-radius: .3vw;
+    transition: all ease .3s;
+    cursor: pointer;
+}
+.b-updt{
+    background-color: #3e87f4;
+}
+.b-updt:hover{
+    background-color: #0d6efd;
+}
+.b-cncl{
+    background-color: #e45260;
+}
+.b-cncl:hover{
+    background-color: #dc3545;
+}
 #data-text{
     overflow-y: auto;
 }
 .c-table tr{
     border-bottom: solid #212529 .1vw;
 }
-.opt{
-    width: 45%;
-    height: 5vh;
-}
 .opt a{
-    width: 50%;
-    height: 5vh;
     text-decoration: none;
 }
 .edi-btn{
@@ -201,6 +211,9 @@ input[type=number] {
 #eliminar{
     color: #dc3545;
     cursor: pointer;
+}
+.updt-data{
+    display: none;
 }
 /*AGREGAR*/
 .c-agregar{
@@ -351,7 +364,7 @@ td select{
 }
 
 .opt button{
-    padding: 5%;
+    padding: 2.5%;
     border-radius: .3vw;
     text-align: center;
     font-size: 1rem;

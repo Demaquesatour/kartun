@@ -9,99 +9,152 @@
     <!--DATA-->
     <div class="c-content">
         <div class="fcc c-titulo">
-            <h1>Panel de Delivery</h1>
+            <h1>Panel de Envío</h1>
         </div>
         <div class="fccc c-data">
-            <div class="c-agregar">
-                <form class="fcc" action="agregarCat.php" method="POST">
-                    <div class="fcsc c-input">
-                        <p>Departamentos</p>
-                        <select id="dprt">
-                            <option selected disabled>SELECCIONE</option>
-                            <?php 
-                                $sql = "SELECT * FROM departamentos";
-                                $result = mysqli_query($conexion,$sql);
-                            ?>
-                            <?php foreach ($result as $opt): ?>
-                            <option value="<?php echo $opt['idDepartamento'];?>"><?php echo $opt['departamento'];?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-                    <div class="fcsc c-input">
-                        <p>Provincias</p>
-                        <select name="provincia" id="prvnc">
-                            <option selected disabled>- - - - - - - -</option>
-                        </select>
-                    </div>
-                    <div class="fcsc c-input">
-                        <p>Distritos</p>
-                        <select name="distrito" id="dstr">
-                            <option selected disabled>- - - - - - - -</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
             <table class="c-table">
-                    <thead>
-                            <tr>
-                                <th scope="col">Ubicación</th>
-                            </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                            $sql = "SELECT * FROM departamentos";
-                            $result = mysqli_query($conexion,$sql);
-                            while($mostrar = mysqli_fetch_array($result)){
-                        ?>
-                        <tr>
-                            <td><?php echo $mostrar['departamento'];?></td>
-                        </tr>
+                <thead>
+                    <tr>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Delivery</th>
+                        <th scope="col">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                        $sql = "SELECT * FROM departamentos";
+                        $result = mysqli_query($conexion,$sql);
+                        foreach ($result as $opt):
+                    ?>
+                    <tr class="dsc-dt">
+                        <td><?php echo $opt['departamento'];?></td>
+                        <td><?php echo $opt['precio'];?></td>
                         <?php
-                        } 
+                            $estado = $opt['status'];
+                            if ($estado === '1'){
+                                ?>
+                                <td>COSTO</td>
+                                <?php
+                            } else {
+                                ?>
+                                <td>GRATIS</td>
+                                <?php
+                            }
                         ?>
-                    </tbody>
+                        <td><i id="editar" class='bx bxs-cog edt'></i></td>
+                    </tr>
+                    <tr class="updt-data">
+                        <td>EDITAR</td>
+                        <td>
+                            <input id="id" name="dlvId" value="<?php echo $opt['idDepartamento']; ?>" type="hidden">
+                            <input id="prc" type="number" step="0000.01" min="1" max="10000" name="dlvPrc" value="<?php echo $opt['precio'];?>">
+                        </td>
+                        <td>
+                            <select id="stt" name="dlvStt">
+                                    <option disabled selected value="">OPCIONES</option>
+                                    <option value="0">GRATIS</option>
+                                    <option value="1">COSTO</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="b-updt">ACTUALIZAR</button>
+                            <button class="b-cncl">CANCELAR</button>
+                        </td>
+                    </tr>
+                    <?php endforeach ?>
+                </tbody>
             </table>
         </div>
     </div>
     <script>
-        let depa = document.querySelector('#dprt');
-        depa.addEventListener('change', actualizarProvincia);
-        
-        function actualizarProvincia(depa){
-            var departamento = depa.target;
-            var select = departamento.value;
-            var provincia = departamento.closest('.fcsc').nextElementSibling.querySelector('#prvnc');
-            fetch('./php/getProvincia.php?dep=' + select)
+        function getDelivery(cont){
+            let dlv = cont;
+            let body = dlv.closest('tbody');
+            // console.log(body);
+            fetch('./php/getEnvio.php')
             .then(response => response.text())
-            .then(html =>{
-                provincia.innerHTML = html;
-                resetearDistrito();
+            .then(table =>{
+                body.innerHTML = table;
+                eventosDistrito();
             });
         }
 
-        let provi = document.querySelector('#prvnc');
-        provi.addEventListener('change', actualizarDistrito);
-
-        function actualizarDistrito(provi){
-            var provincia = provi.target;
-            var select = provincia.value;
-            var distrito = provincia.closest('.fcsc').nextElementSibling.querySelector('#dstr');
-            fetch('./php/getDistrito.php?dis=' + select)
-            .then(response => response.text())
-            .then(html =>{
-                distrito.innerHTML = html;
+        window.addEventListener('DOMContentLoaded', eventosDistrito);
+        function eventosDistrito(){
+            const editData = document.querySelectorAll('.edt');
+            editData.forEach(edt =>{
+                edt.addEventListener('click', abrirEdit);
+            });
+            const cnclData = document.querySelectorAll('.b-cncl');
+            cnclData.forEach(ccl =>{
+                ccl.addEventListener('click', clsEdit);
+            });
+            const pdtData = document.querySelectorAll('.b-updt');
+            pdtData.forEach(pdt =>{
+                pdt.addEventListener('click', updtData);
             });
         }
 
-        function resetearDistrito(){
-            var distrito = document.querySelector('#dstr');
-            var defaultOption = document.createElement("option");
-            defaultOption.text = "- - - - - - - -";
-            defaultOption.selected = true;
-            defaultOption.disabled = true;
-            distrito.textContent = '';
-            distrito.insertAdjacentElement('afterbegin',defaultOption);
+        function abrirEdit(){
+            let icon = this;
+            let data = icon.closest('tr').nextElementSibling;
+            data.style.display = 'table-row';
+
+            // console.log(data);
         }
+
+        function clsEdit(){
+            let btn = this;
+            let edit = btn.closest('tr');
+            edit.style.display = 'none';
+
+            // console.log(edit);
+        }
+
+        function updtData(){
+            let editar = this;
+            let cont = editar.closest('tr');
+            let id = cont.querySelector('#id').value;
+            let precio = cont.querySelector('#prc').value;
+            let estado = cont.querySelector('#stt').value;
+            
+            // console.log(id);
+            // console.log(precio);
+            // console.log(estado);
+            // getDelivery(cont);
+
+            const formData = new FormData();
+            formData.append('dlvId', id);
+            formData.append('dlvPrc', precio);
+            formData.append('dlvStt', estado);
+            console.log(formData);
+
+            fetch('/kartun/admin/editEnvio.php', {
+                method: "POST",
+                body: formData
+            })
+            .then(response =>{
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error("Error al agregar la categoría.");
+            }
+            })
+            .then(data => {
+                getDelivery(cont);
+                Swal.fire({
+                icon: 'success',
+                title: '¡OK!',
+                text: 'El envio se actualizó correctamente.'
+                });
+            })
+            .catch(error =>{
+                console.error(error);
+            });
+        }
+
+
     </script>
 </body>
 </html>

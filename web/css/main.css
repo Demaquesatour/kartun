@@ -636,6 +636,7 @@ input[type=number]::-webkit-outer-spin-button {
     /* background-color: teal; */
 }
 .c-sr i{
+    color: #FC81EF;
     transition: all ease .3s;
 }
 .c-sr i:hover{
@@ -655,7 +656,7 @@ input[type=number]::-webkit-outer-spin-button {
     height: 5vh;
     position: absolute;
     top: 7vh;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     background-color: #FC81EF;
@@ -1576,13 +1577,17 @@ form p{
     background-color: #01E676;
     position: absolute;
     top: 20vh;
-    display: none;
+    display: flex;
+    transform: translateY(100%);
+    opacity: 0;
     align-items: center;
     justify-content: space-around;
     color: white;
+    transition: all ease.3s;
 }
 .rlt a:hover .art-sz{
-    display: flex;
+    transform: translateY(0%);
+    opacity: 1;
     cursor: pointer;
 }
 .app{

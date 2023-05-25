@@ -26,7 +26,7 @@
             <div class="fcsc c-enlace">
                 <a href="categoria.php">Categoría</a>
                 <a href="producto.php">Producto</a>
-                <a href="delivery.php">Delivery</a>
+                <a href="delivery.php">Envío</a>
                 <a href="carrito.php">Carrito</a>
             </div>
             <div class="fsc c-usuario">

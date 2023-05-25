@@ -289,6 +289,9 @@
                 }
             }
 
+            function actualizarComprar(){
+                window.location.reload(true);
+            }
             //Agregar Producto
             const btnAgregar = document.querySelector('#btnAgregar');
             btnAgregar.addEventListener('click', agregarProducto);
@@ -352,6 +355,7 @@
                         actualizarCarrito();
                         actualizarProductos();
                         actualizarPrecio();
+                        actualizarComprar();
                     }
                 })
                 .catch(error =>{
@@ -373,16 +377,25 @@
                 <a href="/kartun/web/template/producto.php?id=<?php echo $art['idProducto'];?>&cat=<?php echo $art['catProducto'];?>">
                     <div class="rlt-art">
                         <img src="/kartun/admin/<?php echo $art['enlace'];?>" alt="">
-                        <div class="art-sz">
                         <?php 
-                            $id = $art['idProducto'];
-                            $sql = "SELECT * FROM variante where productoId  = '$id'";
-                            $result = mysqli_query($conexion,$sql);
+                        $prd = $art['idProducto'];
+                        $consult = "SELECT * FROM variante WHERE productoId = '$prd'";
+                        $rst = mysqli_query($conexion, $consult);
+                        if (mysqli_num_rows($rst) > 0){
                         ?>
-                            <?php foreach ($result as $sz): ?>
-                            <p><?php echo $sz['descripcion'];?></p>
-                            <?php endforeach ?>
-                        </div>
+                            <div class="art-sz">
+                            <?php 
+                                $id = $art['idProducto'];
+                                $sql = "SELECT * FROM variante where productoId  = '$id'";
+                                $result = mysqli_query($conexion,$sql);
+                            ?>
+                                <?php foreach ($result as $sz): ?>
+                                <p><?php echo $sz['descripcion'];?></p>
+                                <?php endforeach ?>
+                            </div>
+                        <?php
+                            }
+                        ?>
                         <div class="art-data">
                             <h3><?php echo $art['producto'];?></h3>
                             <p>S/ <?php echo $art['precio'];?></p>
